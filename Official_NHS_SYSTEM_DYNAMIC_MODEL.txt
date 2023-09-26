@@ -1,6 +1,7 @@
 # rolling average ed attendance
-
+!pip install mplcursors
 import numpy as np
+import random
 import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
@@ -8,11 +9,9 @@ import matplotlib.dates as mdates
 import math
 import tkinter as tk
 from tkinter import filedialog
-
-
-!pip install mplcursors
 import mplcursors
-
+random.seed(10) 
+np.random.seed(10)
 class RollingAverageEDattendance:
     def __init__(self, historical_emergency_attendance, baseline_date):
         self.historical_emergency_attendance = historical_emergency_attendance
@@ -88,7 +87,8 @@ class RollingAverageEDattendance:
 
 
 # Rolling Average Ratio Admission to Attendance
-
+random.seed(10) 
+np.random.seed(10)
 class Rolling_Average_Admission_To_Attendance_Ratio:
     def __init__(self, historical_ratio, baseline_date):
         self.historical_ratio = historical_ratio
@@ -161,7 +161,8 @@ class Rolling_Average_Admission_To_Attendance_Ratio:
 
 
 # Rolling Average Los Non Elective
-
+random.seed(10) 
+np.random.seed(10)
 from collections import deque
 
 class RollingAverageLosNonElective:
@@ -299,7 +300,8 @@ class RollingAverageLosNonElective:
 
 
 # System Dynamic Model
-
+random.seed(10) 
+np.random.seed(10)
 class DynamicModel:
     @staticmethod
     def time(dt_denominator, start_time, end_date_for_simulation):
@@ -489,7 +491,7 @@ class DynamicModel:
         if not isinstance(waiting_admissions, (pd.Series, np.ndarray)):
           waiting_admissions = pd.Series(waiting_admissions)
 
-        admitted = min(beds_available.mean(), waiting_admissions.mean())
+        admitted =min(beds_available.mean(), waiting_admissions.mean())
         return admitted
 
     def update_Non_elective_waiting_admission(self, inflow, outflow):
@@ -626,9 +628,6 @@ class DynamicModel:
 
         return times, occupied_beds, inflows, outflows
 
-
-
-
     def update_Non_elective_waiting_admission(self, inflow, outflow):
         self.Non_elective_waiting_admission = self.Non_elective_waiting_admission + self.dt * (inflow - outflow)
 
@@ -681,12 +680,14 @@ class DynamicModel:
 
 
 
-2nd block
+# **MAIN (for initialisation and instances of the classes described)**
 
 
 
 # Global
 # Read historical LOS non-elective data from Excel sheet
+random.seed(10) 
+np.random.seed(10)
 historical_los_non_elective = pd.read_excel("/content/IC-09 Historical LoS Non Elective.xlsx", sheet_name="Sheet1")
 baseline_date = datetime(2019, 3, 1)
 operational_days=250
@@ -759,7 +760,8 @@ SystemDynamic_NHS = DynamicModel(
     time_to_add_beds_in_weeks=time_to_add_beds_in_weeks,
     date_model_start=start_time_of_simulation,annual_population_growth_rate=1.2)
 all_time_steps, all_net_flow_values, all_inflow_values, all_outflow_values, all_patients_needing_admission_values = SystemDynamic_NHS.waiting_in_a_n_e()
-
+random.seed(10) 
+np.random.seed(10)
 running_time = start_time_of_simulation
 '''
 print(f"Start Time for Simulation:"+ start_time_of_simulation)
@@ -783,8 +785,11 @@ debug_output
 
 
 
+# **DATAFRAME FOR WAITING IN THE A AND E**
 
 
+random.seed(10) 
+np.random.seed(10)
 # storing the values in a dataframe to read the resultant values
 simulation_results_df = pd.DataFrame(columns=[
     'Time Step', 'Time', 'AE Net Flow', 'A&E Attendances',
@@ -813,16 +818,20 @@ for i, running_time in enumerate(all_time_steps):
 
 # Format the 'Time' column to 'dd-mm-yyyy'
 simulation_results_df['Time'] = simulation_results_df['Time'].dt.strftime('%d-%m-%Y')
-
+random.seed(10) 
+np.random.seed(10)
 # Save the simulation results to a CSV file
 simulation_results_df.to_csv('simulation_results.csv', index=False)
 print("Simulation results saved to 'simulation_results.csv'")
 print(simulation_results_df.head())
 
 
+# **PLOT FOT WAITING IN THE A AND E STOCK**
+
 # Convert the 'Time (weeks)' column to datetime format
 simulation_results_df['Time'] = pd.to_datetime(simulation_results_df['Time'], format='%d-%m-%Y')
-
+random.seed(10) 
+np.random.seed(10)
 # Calculate the maximum value rounded up to the nearest 500
 max_value = math.ceil(simulation_results_df['AE Net Flow'].max() / 500) * 500
 
@@ -853,6 +862,8 @@ plt.ylabel('AE Net Flow')
 plt.tight_layout()
 plt.show()
 
+# **PLOT FOR THE FULL STOCK FOR A AND E**
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -860,7 +871,8 @@ import math
 
 # Read in data
 simulation_results_df = pd.read_csv('simulation_results.csv')
-
+random.seed(10) 
+np.random.seed(10)
 # Convert time column to datetime
 simulation_results_df['Time'] = pd.to_datetime(simulation_results_df['Time'], format='%d-%m-%Y')
 
@@ -901,10 +913,13 @@ plt.title('Simulation Metrics Over Time', color='black')
 plt.tight_layout()
 plt.show()
 
+# **CONSIDERING AN ERROR IN READING FOR A AND E WAITING**
+
 from scipy.optimize import curve_fit
 # Read in data
 data = pd.read_csv('simulation_results.csv')
-
+random.seed(10) 
+np.random.seed(10)
 # Convert time column to datetime
 data['Time'] = pd.to_datetime(data['Time'], format='%d-%m-%Y')
 
@@ -941,10 +956,13 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
+# **COMBINED PLOT WITH ACTUAL READING AND ERROR CONSIDERED FOR A AND E**
+
 # Define an exponential growth function
 def exp_growth(x, a, b, c):
     return a * np.exp(b * x) + c
-
+random.seed(10) 
+np.random.seed(10)
 # Generate synthetic data based on the exponential growth model
 synthetic_data = data[['Time']].copy()
 
@@ -985,9 +1003,10 @@ plt.title('Simulation Metrics Over Time (Original & Synthetic)', color='black')
 plt.tight_layout()
 plt.show()
 
-store and plot non elective waiting admissions
+#store and plot non elective waiting admissions
 
-
+random.seed(10) 
+np.random.seed(10)
 SystemDynamic_NHS.run_non_elective_simulation()
 non_elective_simulation_df = SystemDynamic_NHS.get_non_elective_simulation_results_dataframe()
 pd.set_option('display.float_format', '{:.6f}'.format)
@@ -1016,15 +1035,15 @@ plt.show()
 
 fig, axs = plt.subplots(3, 1, figsize=(12, 10))
 
-axs[0].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Patients Needing Admission'], label='Patients Needing Admission')
+axs[0].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Patients Needing Admission'], label='Patients Needing Admission', color='black', linestyle='-.')
 axs[0].set_title("Patients Needing Admission")
 axs[0].grid(True)
 
-axs[1].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Non-Elective Waiting Admission Stock'], label='Non-Elective Waiting Admission Stock', color='orange')
+axs[1].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Non-Elective Waiting Admission Stock'], label='Non-Elective Waiting Admission Stock', color='red')
 axs[1].set_title("Non-Elective Waiting Admission Stock")
 axs[1].grid(True)
 
-axs[2].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['A&E Admitted to Ward'], label='A&E Admitted to Ward', color='green')
+axs[2].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['A&E Admitted to Ward'], label='A&E Admitted to Ward', color='black', linestyle='--')
 axs[2].set_title("A&E Admitted to Ward")
 axs[2].grid(True)
 
@@ -1039,14 +1058,16 @@ plt.show()
 
 times, occupied_beds, inflows, outflows = SystemDynamic_NHS.beds_occupied_by_non_electives()
 
-
-beds_occupied_df = pd.DataFrame({'Time': times,'Beds Occupied': occupied_beds,'Inflows': inflows,'Outflows': outflows})
+random.seed(10) 
+np.random.seed(10)
+beds_occupied_df = pd.DataFrame({'Time': times,'Beds Occupied': occupied_beds,'AE ADMITTED': inflows,'DISCHARGES': outflows})
 
 print(beds_occupied_df.head())
 
 
+# Beds occupied by non electives
 
-times, occupied_beds, inflows, outflows = SystemDynamic_NHS.beds_occupied_by_non_electives()
+occupied_beds= SystemDynamic_NHS.calculate_beds_occupied_updated()
 
 
 beds_df = pd.DataFrame({
@@ -1062,10 +1083,11 @@ beds_df['Time'] = pd.to_datetime(beds_df['Time'])
 
 plt.figure(figsize=(12,6))
 
-plt.plot(beds_df['Time'], beds_df['Beds Occupied'], label='Beds Occupied')
-plt.plot(beds_df['Time'], beds_df['Inflows'], label='Inflows')
-plt.plot(beds_df['Time'], beds_df['Outflows'], label='Outflows')
-
+plt.plot(beds_df['Time'], beds_df['Beds Occupied'], label='Beds Occupied',color='red')
+plt.plot(beds_df['Time'], beds_df['Inflows'], label='AE admitted',color='black',linestyle='-.')
+plt.plot(beds_df['Time'], beds_df['Outflows'], label='Discharged',color='black',linestyle='--')
+random.seed(10) 
+np.random.seed(10)
 plt.title('Beds Occupied by Non-Electives Simulation')
 plt.xlabel('Time')
 plt.ylabel('Beds')
@@ -1081,36 +1103,15 @@ plt.show()
 
 import matplotlib.pyplot as plt
 import numpy as np
-
-# Plot zoomed in view
-plt.figure(figsize=(16,8))
-
-plt.plot(beds_df['Time'], beds_df['Beds Occupied'], label='Beds Occupied')
-plt.plot(beds_df['Time'], beds_df['Inflows'], label='Inflows')
-plt.plot(beds_df['Time'], beds_df['Outflows'], label='Outflows')
-
-# Zoom in x-axis
-num_ticks = 10
-tick_indices = np.linspace(0, len(beds_df)-1, num=num_ticks, dtype=int)
-plt.xticks(beds_df['Time'][tick_indices], rotation=45)
-
-plt.legend()
-plt.title('Beds Occupied Simulation - Zoomed In')
-plt.tight_layout()
-plt.show()
-
-
-
-import matplotlib.pyplot as plt
-import numpy as np
-
+random.seed(10) 
+np.random.seed(10)
 # Assuming the dataframes are named 'simulation_results_df', 'non_elective_simulation_df', and 'beds_df'
 
 # Set up the figure and axes
 fig, axs = plt.subplots(3, 1, figsize=(16, 10))
 
 # Plotting for "waiting in the A&E"
-axs[0].plot(simulation_results_df['Time'], simulation_results_df['AE Net Flow'], label='AE Net Flow')
+axs[0].plot(simulation_results_df['Time'], simulation_results_df['AE Net Flow'], label='AE Net Flow',color='black')
 axs[0].set_title('Waiting in the A&E')
 axs[0].set_ylabel('AE Net Flow')
 num_ticks = 10
@@ -1120,7 +1121,7 @@ axs[0].tick_params(axis='x', rotation=45)
 axs[0].grid(True)
 
 # Plotting for "beds occupied by non-electives"
-axs[1].plot(beds_df['Time'], beds_df['Beds Occupied'], label='Beds Occupied')
+axs[1].plot(beds_df['Time'], beds_df['Beds Occupied'], label='Beds Occupied',color='black')
 axs[1].set_title('Beds Occupied by Non-Electives')
 axs[1].set_ylabel('Beds Occupied')
 num_ticks = 10
@@ -1130,7 +1131,7 @@ axs[1].tick_params(axis='x', rotation=45)
 axs[1].grid(True)
 
 # Plotting for "non-elective waiting admissions"
-axs[2].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Patients Needing Admission'], label='Patients Needing Admission')
+axs[2].plot(non_elective_simulation_df['Time'], non_elective_simulation_df['Patients Needing Admission'], label='Patients Needing Admission', color='black')
 axs[2].set_title('Non-Elective Waiting Admissions')
 axs[2].set_xlabel('Time')
 axs[2].set_ylabel('Patients Needing Admission')
@@ -1146,9 +1147,10 @@ plt.show()
 
 
 import matplotlib.pyplot as plt
-
+random.seed(10) 
+np.random.seed(10)
 # Set up the figure
-plt.figure(figsize=(16, 10))
+plt.figure(figsize=(15,11))
 
 # Plotting for "waiting in the A&E"
 plt.plot(simulation_results_df['Time'], simulation_results_df['AE Net Flow'], 'b--', label='AE Net Flow (Waiting in the A&E)')
@@ -1179,7 +1181,8 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-
+random.seed(10) 
+np.random.seed(10)
 results_run_non_elective = pd.DataFrame(columns=[
     'Time', 'Patients Needing Admission', 'Non-Elective Waiting Admission Stock', 'A&E Admitted to Ward', 'Beds Available'
 ])
@@ -1199,7 +1202,8 @@ beds_available_values = [0] * num_time_steps
 needing_admission_values = [0] * num_time_steps
 waiting_admission_values = [0] * num_time_steps
 a_e_admitted_ward_values = [0] * num_time_steps
-
+random.seed(10) 
+np.random.seed(10)
 for i, running_time in enumerate(SystemDynamic_NHS.time_values):
     if start_time_of_simulation <= running_time <= end_date_for_simulation:
         patients_needing_admission_value = SystemDynamic_NHS.needing_admission_values[i]
@@ -1218,7 +1222,8 @@ for i, running_time in enumerate(SystemDynamic_NHS.time_values):
 
 # Run the beds occupied by non-electives simulation and store results
 times, occupied_beds, inflows, outflows = SystemDynamic_NHS.beds_occupied_by_non_electives()
-
+random.seed(10) 
+np.random.seed(10)
 for i, t in enumerate(times):
     if start_time_of_simulation <= t <= end_date_for_simulation:
         beds_occupied_value = occupied_beds[i]
@@ -1230,5 +1235,106 @@ for i, t in enumerate(times):
         ]
 
 # Save the results as CSV files
+random.seed(10) 
+np.random.seed(10)
 results_run_non_elective.to_csv('results_run_non_elective.csv', index=False)
 results_beds_occupied_non_electives.to_csv('results_beds_occupied_non_electives.csv', index=False)
+# Calculate changes
+results_run_non_elective['Patients Needing Admission Change'] = results_run_non_elective['Patients Needing Admission'].diff()  
+results_run_non_elective['Non-Elective Waiting Admission Stock Change'] = results_run_non_elective['Non-Elective Waiting Admission Stock'].diff()
+results_run_non_elective['A&E Admitted to Ward Change'] = results_run_non_elective['A&E Admitted to Ward'].diff()
+random.seed(10) 
+np.random.seed(10)
+# Calculate growth rates
+results_run_non_elective['Patients Needing Admission Growth'] = results_run_non_elective['Patients Needing Admission Change'] / results_run_non_elective['Patients Needing Admission']
+results_run_non_elective['Non-Elective Waiting Admission Stock Growth'] = results_run_non_elective['Non-Elective Waiting Admission Stock Change'] / results_run_non_elective['Non-Elective Waiting Admission Stock']
+results_run_non_elective['A&E Admitted to Ward Growth'] = results_run_non_elective['A&E Admitted to Ward Change'] / results_run_non_elective['A&E Admitted to Ward']
+random.seed(10) 
+np.random.seed(10)
+# Calculate averages
+results_run_non_elective['Patients Needing Admission Change Avg'] = results_run_non_elective['Patients Needing Admission Change'].mean() 
+results_run_non_elective['Non-Elective Waiting Admission Stock Change Avg'] = results_run_non_elective['Non-Elective Waiting Admission Stock Change'].mean()
+results_run_non_elective['A&E Admitted to Ward Change Avg'] = results_run_non_elective['A&E Admitted to Ward Change'].mean()
+random.seed(10) 
+np.random.seed(10)
+results_run_non_elective['Patients Needing Admission Growth Avg'] = results_run_non_elective['Patients Needing Admission Growth'].mean()
+results_run_non_elective['Non-Elective Waiting Admission Stock Growth Avg'] = results_run_non_elective['Non-Elective Waiting Admission Stock Growth'].mean() 
+results_run_non_elective['A&E Admitted to Ward Growth Avg'] = results_run_non_elective['A&E Admitted to Ward Growth'].mean()
+random.seed(10) 
+np.random.seed(10)
+# Create results dataframe
+results = pd.DataFrame()
+results['Time'] = results_run_non_elective['Time']
+results['Patients Needing Admission Change'] = results_run_non_elective['Patients Needing Admission Change']
+results['Non-Elective Waiting Admission Stock Change'] = results_run_non_elective['Non-Elective Waiting Admission Stock Change']
+results['A&E Admitted to Ward Change'] = results_run_non_elective['A&E Admitted to Ward Change']
+random.seed(10) 
+np.random.seed(10)
+results['Patients Needing Admission Growth'] = results_run_non_elective['Patients Needing Admission Growth']
+results['Non-Elective Waiting Admission Stock Growth'] = results_run_non_elective['Non-Elective Waiting Admission Stock Growth']
+results['A&E Admitted to Ward Growth'] = results_run_non_elective['A&E Admitted to Ward Growth']
+random.seed(10) 
+np.random.seed(10)
+results['Patients Needing Admission Change Avg'] = results_run_non_elective['Patients Needing Admission Change Avg']
+results['Non-Elective Waiting Admission Stock Change Avg'] = results_run_non_elective['Non-Elective Waiting Admission Stock Change Avg']  
+results['A&E Admitted to Ward Change Avg'] = results_run_non_elective['A&E Admitted to Ward Change Avg']
+random.seed(10) 
+np.random.seed(10)
+results['Patients Needing Admission Growth Avg'] = results_run_non_elective['Patients Needing Admission Growth Avg']
+results['Non-Elective Waiting Admission Stock Growth Avg'] = results_run_non_elective['Non-Elective Waiting Admission Stock Growth Avg']
+results['A&E Admitted to Ward Growth Avg'] = results_run_non_elective['A&E Admitted to Ward Growth Avg']
+random.seed(10) 
+np.random.seed(10)
+# Export to CSV
+results.to_csv('results.csv', index=False)
+
+print("Exported changes, growth rates, and averages to CSV.")
+
+random.seed(10) 
+np.random.seed(10)
+# Calculate change between time steps 
+results_run_non_elective['Patients Needing Admission Change'] = results_run_non_elective['Patients Needing Admission'].diff()
+results_run_non_elective['Non-Elective Waiting Admission Stock Change'] = results_run_non_elective['Non-Elective Waiting Admission Stock'].diff()
+results_run_non_elective['A&E Admitted to Ward Change'] = results_run_non_elective['A&E Admitted to Ward'].diff()
+results_run_non_elective['Beds Available Change'] = results_run_non_elective['Beds Available'].diff()
+random.seed(10) 
+np.random.seed(10)
+# Plot the change in stock behvaiour over time 
+plt.figure(dpi=1200)
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['Patients Needing Admission Change'], label='Patients Needing Admission Change', linestyle='--',color='black')
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['Non-Elective Waiting Admission Stock Change'], label='Non-Elective Waiting Admission Stock Change', linestyle='-.', color='red')
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['A&E Admitted to Ward Change'], label='A&E Admitted to Ward Change', color='black')
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['Beds Available Change'], label='Beds Available Change', color='black',linestyle='dotted')
+# Choose indices for tick locations
+tick_indices = np.linspace(0, len(results_run_non_elective) - 1, num=num_tick_labels, dtype=int)
+
+# Use tick_indices to set tick positions and labels
+plt.xticks(results_run_non_elective['Time'][tick_indices], results_run_non_elective['Time'][tick_indices].dt.strftime('%m, %Y'), rotation=45, ha='right')
+
+plt.title('Change in behaviour over time')
+plt.ylabel('Change')
+plt.legend()
+random.seed(10) 
+np.random.seed(10)
+# Calculate growth rate 
+results_run_non_elective['Patients Needing Admission Growth'] = results_run_non_elective['Patients Needing Admission Change'] / results_run_non_elective['Patients Needing Admission']
+results_run_non_elective['Non-Elective Waiting Admission Stock Growth'] = results_run_non_elective['Non-Elective Waiting Admission Stock Change'] / results_run_non_elective['Non-Elective Waiting Admission Stock']  
+results_run_non_elective['A&E Admitted to Ward Growth'] = results_run_non_elective['A&E Admitted to Ward Change'] / results_run_non_elective['A&E Admitted to Ward']
+random.seed(10) 
+np.random.seed(10)
+# Plot growth rates
+plt.figure(dpi=1200)
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['Patients Needing Admission Growth'], label='Patients Needing Admission Growth', linestyle='--',color='black')
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['Non-Elective Waiting Admission Stock Growth'], label='Non-Elective Waiting Admission Stock Growth', linestyle='-.', color='red')
+plt.plot(results_run_non_elective['Time'], results_run_non_elective['A&E Admitted to Ward Growth'], label='A&E Admitted to Ward Growth', color='black',linestyle='dotted')
+# Choose indices for tick locations
+tick_indices = np.linspace(0, len(results_run_non_elective) - 1, num=num_tick_labels, dtype=int)
+
+# Use tick_indices to set tick positions and labels
+plt.xticks(results_run_non_elective['Time'][tick_indices], results_run_non_elective['Time'][tick_indices].dt.strftime('%m, %Y'), rotation=45, ha='right')
+
+plt.title('Growth Rates Observed')
+plt.ylabel('Growth Rate')
+plt.legend()
+
+plt.show()
