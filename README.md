@@ -1,3 +1,6 @@
+
+To refer me : Nandi, S. (2023) ‘An Open Source Model to Simulate Wait Lists for Hospital Beds for NHS’. Southampton: University of Southampton.
+
 #Official_NHS_SYSTEM_DYNAMIC_MODEL
 access the text file named this for the final code 
 
